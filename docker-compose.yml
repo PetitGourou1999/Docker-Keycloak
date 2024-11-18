@@ -7,15 +7,15 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: no
     networks:
       - keycloak_network
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.0
-    #volumes:
-    #  - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
-    #command: ["start-dev", "--import-realm"]
-    command: ["start-dev"]
+    volumes:
+      - ./keycloak/quarkus.json:/opt/keycloak/data/import/quarkus.json:ro
+    command: ["start-dev", "--import-realm"]
     environment:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
@@ -32,7 +32,7 @@ services:
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - 8090:8080
-    restart: always
+    restart: no
     depends_on:
       - postgres
     networks:
